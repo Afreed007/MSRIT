@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        fieldset{
+            width:400px;
+        }
+        div{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to RIT</h1>
+    <fieldset>
+        <legend>Personal Details</legend>
+                <label >Salutation</label><br>
+        <select >
+            <option value="">None</option>
+        </select><br><br>
+        
+        <div>
+            <label for="fname">First Name</label>
+            <input type="text" id="fname">
+        </div>
+        <div>
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname">
+        </div>
+        <div>
+            <div>
+                <label for="gender">Gender</label>
+            </div>
+            <div>
+            <input type="radio" id="male">
+            <label for="male">Male</label>
+            <input type="radio" id="female">
+            <label for="female">Female</label>
+            </div>
+        </div>
+        <div>
+            <label for="Email">Email</label>
+            <input type="email" id="email">
+        </div>
+        <div>
+            <label for="DOB">Date of Birth</label>
+            <input type="date" id="DOB">
+        </div>
+        <div>
+            <label for="Address">Address</label>
+            <textarea name="" id=""></textarea>
+        </div>
+        <button>Submit</button>
+    </fieldset>
+</body>
+</html>
