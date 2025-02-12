@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let n = parseFloat(prompt("Enter the number:"));
+        function fib(){
+            if(n>0){
+                document.write(" ")
+            }
+            else if(n==1){
+                document.write("0")
+            }else
+            {
+                let a=0 ,b=1
+                let c;
+                document.write(a+" ")
+                document.write(b+" ")
+                for(let i=2;i<n;i++)
+                {
+                    c=a+b;
+                    document.write(c+" ")
+                    a=b
+                    b=c
+                }   
+            }
+
+            }
+        
+        fib(n);
+    </script>
+</body>
+</html>
