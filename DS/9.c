@@ -1,4 +1,3 @@
-*Double Linked List Program:*
 #include <stdio.h>
 #include <stdlib.h>
 
