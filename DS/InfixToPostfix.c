@@ -31,7 +31,7 @@ int main()
     scanf("%s",exp);
     printf("\n");
     e = exp;
-
+    
     while(*e != '\0')
     {
         if(isalnum(*e))
@@ -51,7 +51,7 @@ int main()
         }
         e++;
     }
-
+    
     while(top != -1)
     {
         printf("%c ",pop());

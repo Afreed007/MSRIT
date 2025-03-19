@@ -3,16 +3,17 @@
 
 struct Node {
     int data;
+    struct Node* prev;
     struct Node* next;
-};
+} *head = NULL;
 
-struct Node* head = NULL; 
-int count = 0;   
-int MAX_SIZE = 0; 
+int count = 0;
+int MAX_SIZE = 0;
 
 struct Node* createNode(int data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = data;
+    newNode->prev = NULL;
     newNode->next = NULL;
     return newNode;
 }
@@ -26,14 +27,14 @@ void insertAtBegin(int data) {
     struct Node* newNode = createNode(data);
     if (head == NULL) {
         head = newNode;
-        newNode->next = head; 
+        head->next = head;
+        head->prev = head;
     } else {
-        struct Node* temp = head;
-        while (temp->next != head)
-            temp = temp->next;
-        
+        struct Node* tail = head->prev;
         newNode->next = head;
-        temp->next = newNode;
+        newNode->prev = tail;
+        head->prev = newNode;
+        tail->next = newNode;
         head = newNode;
     }
     count++;
@@ -48,14 +49,14 @@ void insertAtEnd(int data) {
     struct Node* newNode = createNode(data);
     if (head == NULL) {
         head = newNode;
-        newNode->next = head;
+        head->next = head;
+        head->prev = head;
     } else {
-        struct Node* temp = head;
-        while (temp->next != head)
-            temp = temp->next;
-        
-        temp->next = newNode;
+        struct Node* tail = head->prev;
+        tail->next = newNode;
+        newNode->prev = tail;
         newNode->next = head;
+        head->prev = newNode;
     }
     count++;
 }
@@ -73,10 +74,12 @@ void insertInMiddle(int data, int position) {
 
     struct Node* newNode = createNode(data);
     struct Node* temp = head;
-    for (int i = 1; temp->next != head && i < position - 1; i++)
+    for (int i = 1; i < position - 1 && temp->next != head; i++)
         temp = temp->next;
 
     newNode->next = temp->next;
+    newNode->prev = temp;
+    temp->next->prev = newNode;
     temp->next = newNode;
     count++;
 }
@@ -91,14 +94,12 @@ void deleteAtBegin() {
     if (head->next == head) {
         head = NULL;
     } else {
-        struct Node* last = head;
-        while (last->next != head)
-            last = last->next;
-
+        struct Node* tail = head->prev;
         head = head->next;
-        last->next = head;
+        head->prev = tail;
+        tail->next = head;
     }
-    
+
     free(temp);
     count--;
 }
@@ -109,17 +110,12 @@ void deleteAtEnd() {
         return;
     }
 
-    struct Node* temp = head;
-    struct Node* prev = NULL;
-    
+    struct Node* temp = head->prev;
     if (head->next == head) {
         head = NULL;
     } else {
-        while (temp->next != head) {
-            prev = temp;
-            temp = temp->next;
-        }
-        prev->next = head;
+        temp->prev->next = head;
+        head->prev = temp->prev;
     }
 
     free(temp);
@@ -138,18 +134,16 @@ void deleteInMiddle(int position) {
     }
 
     struct Node* temp = head;
-    struct Node* prev = NULL;
-    for (int i = 1; temp->next != head && i < position; i++) {
-        prev = temp;
+    for (int i = 1; i < position && temp->next != head; i++)
         temp = temp->next;
-    }
 
-    if (temp == head) {
+    if (temp->next == head) {
         printf("Position out of range!\n");
         return;
     }
 
-    prev->next = temp->next;
+    temp->prev->next = temp->next;
+    temp->next->prev = temp->prev;
     free(temp);
     count--;
 }
@@ -175,19 +169,34 @@ void searchElement(int value) {
     printf("Element %d not found in the list.\n", value);
 }
 
-void displayList() {
+void displayForward() {
     if (head == NULL) {
         printf("List is empty!\n");
         return;
     }
 
     struct Node* temp = head;
-    printf("List: ");
+    printf("List (Forward): ");
     do {
         printf("%d -> ", temp->data);
         temp = temp->next;
     } while (temp != head);
     printf("(head)\n");
+}
+
+void displayBackward() {
+    if (head == NULL) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    struct Node* temp = head->prev;
+    printf("List (Backward): ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->prev;
+    } while (temp != head->prev);
+    printf("(tail)\n");
 }
 
 int main() {
@@ -197,7 +206,7 @@ int main() {
     scanf("%d", &MAX_SIZE);
 
     while (1) {
-        printf("\n--- Circular Singly Linked List Operations Menu ---\n");
+        printf("\n--- Circular Doubly Linked List Operations Menu ---\n");
         printf("1. Insert at Beginning\n");
         printf("2. Insert at End\n");
         printf("3. Insert at a Position\n");
@@ -205,8 +214,9 @@ int main() {
         printf("5. Delete from End\n");
         printf("6. Delete from a Position\n");
         printf("7. Search for an Element\n");
-        printf("8. Display List\n");
-        printf("9. Exit\n");
+        printf("8. Display Forward\n");
+        printf("9. Display Backward\n");
+        printf("10. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -245,9 +255,12 @@ int main() {
                 searchElement(data);
                 break;
             case 8:
-                displayList();
+                displayForward();
                 break;
             case 9:
+                displayBackward();
+                break;
+            case 10:
                 printf("Exiting program.\n");
                 exit(0);
             default:
