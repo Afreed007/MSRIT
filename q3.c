@@ -1,17 +1,19 @@
 #include <stdio.h>
-
+#include<time.h>
 int mprimefact[50];
 int mtop = 0;
 int nprimefact[50];
 int ntop = 0;
 
 int isprime(int n) {
-    if (n < 2) return 0;
+    int count = 0;
     for (int i = 2; i * i <= n; i++) {
-        if (n % i == 0)
-            return 0;
+        if (n % i == 0) {
+            count++;
+            break;
+        }
     }
-    return 1;
+    return count == 0 && n > 1;
 }
 
 void pushfactorsm(int m) {
@@ -43,37 +45,43 @@ void pushfactorsn(int n) {
 }
 
 void gcd() {
-    int used[50] = {0}; // To mark used elements in nprimefact
     int result = 1;
     for (int i = 1; i <= mtop; i++) {
         for (int j = 1; j <= ntop; j++) {
-            if (mprimefact[i] == nprimefact[j] && !used[j]) {
+            if (mprimefact[i] == nprimefact[j]) {
                 result *= mprimefact[i];
-                used[j] = 1;
+                nprimefact[j] = 0;
                 break;
             }
         }
     }
-    printf("\nGCD using prime factors: %d\n", result);
+    printf("GCD is: %d\n", result);
 }
 
 int main() {
-    int m = 180;
-    int n = 30;
-
+    int m = 60;
+    int n = 108;
+    clock_t end,start;
+    double computedtime;
+    start=clock();
     pushfactorsm(m);
     pushfactorsn(n);
-
     printf("Prime factors of %d: ", m);
     for (int i = 1; i <= mtop; i++) {
         printf("%d ", mprimefact[i]);
     }
 
+
     printf("\nPrime factors of %d: ", n);
     for (int i = 1; i <= ntop; i++) {
         printf("%d ", nprimefact[i]);
     }
-
-    gcd(); 
+    printf("\n");
+    gcd();
+    end=clock();
+    computedtime=((double)(end-start)/CLOCKS_PER_SEC);
+    printf("time taken is %f second\n",computedtime);
+    printf("time taken is %f milisecond\n",computedtime*1000);
+    printf("time taken is %f microsecond\n",computedtime*1000000);
     return 0;
 }
